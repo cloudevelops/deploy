@@ -41,12 +41,14 @@ class deploy (
   $role = $deploy::params::role,
 ) inherits deploy::params {
 
+  files {'/var/lib/deploy':
+    ensure => directory
+  }
+
   $role_default = {
     hiera_scope => $hiera_scope,
     role => $role,
   }
-
-  notify{"deploy, creating resources: ${application}":}
 
   create_resources('deploy::role',$application,$role_default)
 

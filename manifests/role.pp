@@ -2,7 +2,6 @@ define deploy::role (
   $hiera_scope,
   $role,
   $application = $name,
-  $configure_services = false,
 ) {
 
   $application_role = hiera("${hiera_scope}${application}::role")
@@ -17,7 +16,7 @@ define deploy::role (
     }
 
     notify{"role, creating resources: ${application_role}":}
-    create_resources_prepend('deploy::application',$application_role,$application_default,"${application}-")
+    create_resources_prepend('deploy::application',$application_role,$application_default,"-${application}")
 
   }
 

@@ -5,6 +5,7 @@ define deploy::role (
 ) {
 
   $application_role = hiera("${hiera_scope}${application}::role")
+  notify {"application_role:${application_role}": }
 
   if is_hash($hostgroup) {
 

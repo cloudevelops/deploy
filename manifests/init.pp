@@ -35,7 +35,19 @@
 #
 # Copyright 2014 Your name here, unless otherwise noted.
 #
-class deploy {
+class deploy (
+  $application = {},
+  $hiera_scope = $deploy::params::hiera_scope,
+  $role = $deploy::params::role,
+) inherits deploy::params {
 
+  $role_default = {
+    hiera_scope => $hiera_scope,
+    role => $role,
+  }
+
+  notify{"deploy, creating resources: ${application}":}
+
+  create_resources('deploy::role',$application,$role_default)
 
 }

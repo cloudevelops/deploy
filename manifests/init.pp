@@ -41,7 +41,7 @@ class deploy (
   $role = $deploy::params::role,
 ) inherits deploy::params {
 
-  files {'/var/lib/deploy':
+  file {'/var/lib/deploy':
     ensure => directory
   }
 

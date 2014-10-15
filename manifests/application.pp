@@ -14,8 +14,9 @@ define deploy::application (
     $branch = hiera("${hiera_scope}${application}::branch",'')
     $version = hiera("${hiera_scope}${application}::version",'1.0-1')
 
-    file {"/var/lib/appdeploy/${application}.info":
+    file {"/var/lib/deploy/${application}.info":
       ensure => present,
+      require => File['/var/lib/deploy'],
       content => "Application: ${application}
 Role: ${role}
 Type: ${type}

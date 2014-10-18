@@ -21,6 +21,15 @@ define deploy::application (
       require => File['/var/lib/deploy'],
       content => template('deploy/application/application.json.erb'),
     }
+
+    case $artefact_type {
+      'package': {
+        package { $artefact:
+          ensure => $version
+        }
+      }
+    }
+
   }
 
 }

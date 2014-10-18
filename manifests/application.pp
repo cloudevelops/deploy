@@ -1,5 +1,5 @@
 define deploy::application (
-  $application,
+  $id,
   $hiera_scope,
   $role,
   $original_name,
@@ -10,18 +10,16 @@ define deploy::application (
   if ($role == $application_role) {
 #    notify{"application role ok: ${application_role}":}
 
-    $type = hiera("${hiera_scope}${application}::type",'package')
-    $branch = hiera("${hiera_scope}${application}::branch",'')
-    $version = hiera("${hiera_scope}${application}::version",'1.0-1')
+    $artefact = hiera("${hiera_scope}${id}::artefact")
+    $artefact_type = hiera("${hiera_scope}${id}::artefact_type",'package')
+    $branch = hiera("${hiera_scope}${id}::branch")
+    $path = hiera("${hiera_scope}${id}::path")
+    $version = hiera("${hiera_scope}${id}::version")
 
-    file {"/var/lib/deploy/${application}.info":
+    file {"/var/lib/deploy/${id}.json":
       ensure => present,
       require => File['/var/lib/deploy'],
-      content => "Application: ${application}
-Role: ${role}
-Type: ${type}
-Branch: ${branch}
-Version: ${version}\n"
+      content => template('deploy/application/application.json.erb'),
     }
   }
 

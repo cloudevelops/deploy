@@ -3,7 +3,7 @@ define deploy::application (
   $hiera_scope,
   $role,
   $original_name,
-  $configure_services = false,
+  $run = false,
 ) {
 
   $application_role = $original_name

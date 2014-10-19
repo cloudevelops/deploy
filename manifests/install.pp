@@ -1,5 +1,5 @@
 define deploy::install (
-  $id = name,
+  $id = $name,
   $artefact,
   $artefact_type,
   $version,

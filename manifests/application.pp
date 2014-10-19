@@ -16,18 +16,16 @@ define deploy::application (
     $path = hiera("${hiera_scope}${id}::path")
     $version = hiera("${hiera_scope}${id}::version")
 
-    file {"/var/lib/deploy/${id}.json":
+    file {"/var/lib/${deploy::user}/${id}.json":
       ensure => present,
-      require => File['/var/lib/deploy'],
+      require => File["/var/lib/${deploy::user}"],
       content => template('deploy/application/application.json.erb'),
     }
 
-    case $artefact_type {
-      'package': {
-        package { $artefact:
-          ensure => $version
-        }
-      }
+    deploy::install{ $id:
+      artefact => $artefact,
+      artefact_type => $artefact_type,
+      version => $version
     }
 
   }

@@ -38,12 +38,17 @@
 class deploy (
   $application = {},
   $hiera_scope = $deploy::params::hiera_scope,
+  $private_key,
+  $public_key,
   $role = $deploy::params::role,
+  $user = $deploy::params::user,
+  $group = $deploy::params::group,
+  $secondary_group = undef,
+
+
 ) inherits deploy::params {
 
-  file {'/var/lib/deploy':
-    ensure => directory
-  }
+  class {'deploy::user': }
 
   $role_default = {
     hiera_scope => $hiera_scope,

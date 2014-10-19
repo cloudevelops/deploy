@@ -25,7 +25,7 @@ define deploy::install (
   }
 
   exec { "${name}-chown":
-    command => "chown ${user}:${group} * -R",
+    command => "shopt -s dotglob; chown ${user}:${group} * -R; shopt -u dotglob",
     refreshonly => true,
     cwd => $path,
     path    => $::path,
@@ -33,7 +33,7 @@ define deploy::install (
   }
 
   exec { "${name}-chmod":
-    command => "chmod ${mode} * -R",
+    command => "shopt -s dotglob; chmod ${mode} * -R; shopt -u dotglob",
     refreshonly => true,
     cwd => $path,
     path    => $::path,

@@ -44,6 +44,7 @@ class deploy (
   $user = $deploy::params::user,
   $group = $deploy::params::group,
   $secondary_group = undef,
+  $mode = $deploy::params::mode,
 
 
 ) inherits deploy::params {

@@ -4,5 +4,6 @@ class deploy::params {
   $role = $::hostgroup
   $user = 'deploy'
   $group = 'deploy'
+  $mode = '660'
 
 }

@@ -15,6 +15,9 @@ define deploy::application (
     $branch = hiera("${hiera_scope}${id}::branch")
     $path = hiera("${hiera_scope}${id}::path")
     $version = hiera("${hiera_scope}${id}::version")
+    $user = hiera("${hiera_scope}${id}::user",$deploy::user)
+    $group = hiera("${hiera_scope}${id}::group",$deploy::group)
+    $mode = hiera("${hiera_scope}${id}::mode",$deploy::mode)
 
     file {"/var/lib/${deploy::user}/${id}.json":
       ensure => present,
@@ -25,7 +28,11 @@ define deploy::application (
     deploy::install{ $id:
       artefact => $artefact,
       artefact_type => $artefact_type,
-      version => $version
+      version => $version,
+      path => $path,
+      user => $user,
+      group => $group,
+      mode => $mode,
     }
 
   }

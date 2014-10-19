@@ -13,6 +13,7 @@ define deploy::application (
     $artefact = hiera("${hiera_scope}${id}::artefact")
     $artefact_type = hiera("${hiera_scope}${id}::artefact_type",'package')
     $branch = hiera("${hiera_scope}${id}::branch")
+    $build = hiera("${hiera_scope}${id}::build",'1')
     $path = hiera("${hiera_scope}${id}::path")
     $version = hiera("${hiera_scope}${id}::version")
     $user = hiera("${hiera_scope}${id}::user",$deploy::user)

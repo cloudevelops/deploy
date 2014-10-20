@@ -4,6 +4,7 @@ define deploy::application (
   $role,
   $original_name,
   $run = false,
+  $exported_resources = $run,
 ) {
 
   $application_role = $original_name
@@ -19,6 +20,9 @@ define deploy::application (
     $user = hiera("${hiera_scope}${id}::user",$deploy::user)
     $group = hiera("${hiera_scope}${id}::group",$deploy::group)
     $mode = hiera("${hiera_scope}${id}::mode",$deploy::mode)
+    $mysql_resource = hiera("${hiera_scope}${id}::mysql_resource",{})
+    $vhost_resource = hiera("${hiera_scope}${id}::vhost_resource",{})
+    $upstream_resource = hiera("${hiera_scope}${id}::upstream_resource",{})
 
     file {"/var/lib/${deploy::user}/${id}.json":
       ensure => present,
@@ -34,6 +38,16 @@ define deploy::application (
       user => $user,
       group => $group,
       mode => $mode,
+    }
+
+    if $run {
+
+      if $exported_resources {
+        create_resources_append('deploy::resource::mysql',$mysql_resource,{},"#${name}@${fqdn}")
+        create_resources_append('deploy::resource::vhost',$vhost_resource,{},"#${name}@${fqdn}")
+        create_resources_append('deploy::resource::upstream',$upstream_resource,{},"#${name}@${fqdn}")
+      }
+
     }
 
   }

@@ -1,6 +1,13 @@
-define deploy::resource::config (
+define deploy::resource::configfile (
   $original_name,
   $mysql_resource,
+  $memcache_resource,
+  $memcacheq_resource,
+  $rabbitmq_resource,
+  $mongo_resource,
+  $graylog_resource,
+  $api_resource,
+  $config_resource,
   $file,
   $template,
   $user_default,

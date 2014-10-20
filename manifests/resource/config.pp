@@ -1,4 +1,5 @@
 define deploy::resource::config (
+  $original_name,
   $mysql_resource,
   $file,
   $template,
@@ -8,6 +9,7 @@ define deploy::resource::config (
   $user = $user_default,
   $group = $group_default,
   $mode = $mode_default,
+  $id = $original_name,
 ) {
 
   file { '$file':

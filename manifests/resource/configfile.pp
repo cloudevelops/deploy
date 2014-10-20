@@ -19,7 +19,7 @@ define deploy::resource::configfile (
   $id = $original_name,
 ) {
 
-  file { '$file':
+  file { $file:
     ensure => present,
     owner => $user,
     group => $group,

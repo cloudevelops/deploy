@@ -22,12 +22,4 @@ define deploy::resource::exec (
     require => [ File["/var/lib/${deploy::user}/${id}.json"] ];
   }
 
-  file { $file:
-    ensure => present,
-    owner => $user,
-    group => $group,
-    mode => $mode,
-    content => template($template)
-  }
-
 }

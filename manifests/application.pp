@@ -32,6 +32,7 @@ define deploy::application (
     $graylog_resource = hiera("${hiera_scope}${id}::graylog_resource",{})
     $api_resource = hiera("${hiera_scope}${id}::api_resource",{})
     $config_resource = hiera("${hiera_scope}${id}::config_resource",{})
+    $exec_resource = hiera("${hiera_scope}${id}::exec_resource",{})
 
     file {"/var/lib/${deploy::user}/${id}.json":
       ensure => present,
@@ -66,6 +67,13 @@ define deploy::application (
           mode_default => $mode,
         }
         create_resources_append('deploy::resource::configfile',$configfile_resource,$configfile_defaults,"#${name}@${fqdn}")
+        $exec_defaults = {
+          id => $id,
+          path_default => $path,
+          user_default => $user,
+          group_default => $group,
+        }
+        create_resources_append('deploy::resource::exec',$exec_resource,$exec_defaults,"#${name}@${fqdn}")
       }
 
       if $exported_resources {

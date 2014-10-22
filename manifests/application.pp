@@ -25,6 +25,8 @@ define deploy::application (
     $vhost_resource = hiera("${hiera_scope}${id}::vhost_resource",{})
     $upstream_resource = hiera("${hiera_scope}${id}::upstream_resource",{})
     $file_resource = hiera("${hiera_scope}${id}::file_resource",{})
+    $directory_resource = hiera("${hiera_scope}${id}::directory_resource",{})
+    $symlink_resource = hiera("${hiera_scope}${id}::symlink_resource",{})
     $memcache_resource = hiera("${hiera_scope}${id}::memcache_resource",{})
     $memcacheq_resource = hiera("${hiera_scope}${id}::memcacheq_resource",{})
     $rabbitmq_resource = hiera("${hiera_scope}${id}::rabbitmq_resource",{})
@@ -32,7 +34,6 @@ define deploy::application (
     $graylog_resource = hiera("${hiera_scope}${id}::graylog_resource",{})
     $api_resource = hiera("${hiera_scope}${id}::api_resource",{})
     $config_resource = hiera("${hiera_scope}${id}::config_resource",{})
-    $exec_resource = hiera("${hiera_scope}${id}::exec_resource",{})
     $exec_resource = hiera("${hiera_scope}${id}::exec_resource",{})
 
     file {"/var/lib/${deploy::user}/${id}.json":

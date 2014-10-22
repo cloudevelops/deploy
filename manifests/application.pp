@@ -24,7 +24,7 @@ define deploy::application (
     $mysql_resource = hiera("${hiera_scope}${id}::mysql_resource",{})
     $vhost_resource = hiera("${hiera_scope}${id}::vhost_resource",{})
     $upstream_resource = hiera("${hiera_scope}${id}::upstream_resource",{})
-    $configfile_resource = hiera("${hiera_scope}${id}::configfile_resource",{})
+    $file_resource = hiera("${hiera_scope}${id}::file_resource",{})
     $memcache_resource = hiera("${hiera_scope}${id}::memcache_resource",{})
     $memcacheq_resource = hiera("${hiera_scope}${id}::memcacheq_resource",{})
     $rabbitmq_resource = hiera("${hiera_scope}${id}::rabbitmq_resource",{})
@@ -32,6 +32,7 @@ define deploy::application (
     $graylog_resource = hiera("${hiera_scope}${id}::graylog_resource",{})
     $api_resource = hiera("${hiera_scope}${id}::api_resource",{})
     $config_resource = hiera("${hiera_scope}${id}::config_resource",{})
+    $exec_resource = hiera("${hiera_scope}${id}::exec_resource",{})
     $exec_resource = hiera("${hiera_scope}${id}::exec_resource",{})
 
     file {"/var/lib/${deploy::user}/${id}.json":
@@ -53,7 +54,21 @@ define deploy::application (
     if $run {
 
       if $local_resources {
-        $configfile_defaults = {
+
+        $directory_defaults = {
+          user_default => $user,
+          group_default => $group,
+          mode_default => $mode,
+        }
+
+        deploy::resource::directory_wrapper { $id:
+          directory_resource => $directory_resource,
+          directory_defaults => $directory_defaults,
+          directory_id => "#${name}@${fqdn}",
+          require => [ Deploy::Install[$id], File["/var/lib/${deploy::user}/${id}.json"] ]
+        }
+
+        $file_defaults = {
           mysql_resource => $mysql_resource,
           memcache_resource => $memcache_resource,
           memcacheq_resource => $memcacheq_resource,
@@ -66,7 +81,27 @@ define deploy::application (
           group_default => $group,
           mode_default => $mode,
         }
-        create_resources_append('deploy::resource::configfile',$configfile_resource,$configfile_defaults,"#${name}@${fqdn}")
+
+        deploy::resource::file_wrapper { $id:
+          file_resource => $file_resource,
+          file_defaults => $file_defaults,
+          file_id => "#${name}@${fqdn}",
+          require => [ Deploy::Install[$id], File["/var/lib/${deploy::user}/${id}.json"], Deploy::Resource::Directory_wrapper[$id] ]
+        }
+
+        $symlink_defaults = {
+          user_default => $user,
+          group_default => $group,
+          mode_default => $mode,
+        }
+
+        deploy::resource::symlink_wrapper { $id:
+          symlink_resource => $symlink_resource,
+          symlink_defaults => $symlink_defaults,
+          symlink_id => "#${name}@${fqdn}",
+          require => [ Deploy::Install[$id], File["/var/lib/${deploy::user}/${id}.json"], Deploy::Resource::File_wrapper[$id], Deploy::Resource::Directory_wrapper[$id] ]
+        }
+
         $exec_defaults = {
           id => $id,
           path_default => $path,

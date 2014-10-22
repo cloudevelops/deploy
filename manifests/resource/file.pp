@@ -1,4 +1,4 @@
-define deploy::resource::configfile (
+define deploy::resource::file (
   $original_name,
   $mysql_resource,
   $memcache_resource,
@@ -8,7 +8,6 @@ define deploy::resource::configfile (
   $graylog_resource,
   $api_resource,
   $config_resource,
-  $file,
   $template,
   $user_default,
   $group_default,
@@ -19,7 +18,7 @@ define deploy::resource::configfile (
   $id = $original_name,
 ) {
 
-  file { $file:
+  file { $name:
     ensure => present,
     owner => $user,
     group => $group,

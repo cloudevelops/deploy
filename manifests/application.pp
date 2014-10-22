@@ -62,7 +62,7 @@ define deploy::application (
           mode_default => $mode,
         }
 
-        notify {"directory_resource: ${directory_resource}":}
+        notify {"directory_resource: ${id}-${directory_resource}":}
 
         deploy::resource::directory_wrapper { $id:
           directory_resource => $directory_resource,

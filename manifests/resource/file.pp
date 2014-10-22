@@ -18,7 +18,7 @@ define deploy::resource::file (
   $id = $original_name,
 ) {
 
-  file { $name:
+  file { $original_name:
     ensure => present,
     owner => $user,
     group => $group,

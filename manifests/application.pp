@@ -62,6 +62,8 @@ define deploy::application (
           mode_default => $mode,
         }
 
+        notify {"directory_resource: ${directory_resource}":}
+
         deploy::resource::directory_wrapper { $id:
           directory_resource => $directory_resource,
           directory_defaults => $directory_defaults,

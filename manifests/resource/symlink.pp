@@ -1,4 +1,5 @@
 define deploy::resource::symlink (
+  $original_name,
   $user_default,
   $group_default,
   $mode_default,
@@ -9,9 +10,10 @@ define deploy::resource::symlink (
   $mode = $mode_default,
   $require = undef,
   $force = undef,
+  $id = $original_name,
 ) {
 
-  file { $name:
+  file { $id:
     ensure => $ensure,
     target => $target,
     owner => $user,

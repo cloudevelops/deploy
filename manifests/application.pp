@@ -52,14 +52,12 @@ define deploy::application (
       mode => $mode,
     }
 
-    if $run {
+    if $local_resources {
 
-      if $local_resources {
-
-        $directory_defaults = {
-          user_default => $user,
-          group_default => $group,
-          mode_default => $mode,
+      $directory_defaults = {
+        user_default => $user,
+        group_default => $group,
+        mode_default => $mode,
         }
 
 #        notify {"directory_resource: ${id}-${directory_resource}":}
@@ -113,6 +111,9 @@ define deploy::application (
         }
         create_resources_append('deploy::resource::exec',$exec_resource,$exec_defaults,"#${name}@${fqdn}")
       }
+
+
+    if $run {
 
       if $exported_resources {
         create_resources_append('deploy::resource::mysql',$mysql_resource,{},"#${name}@${fqdn}")

@@ -48,7 +48,7 @@ define deploy::resource::vhost (
         deny_location => $deny_location,
         rewrite_vhost => $rewrite_vhost,
         add_location => $add_location,
-        extra_location => $add_location,
+        extra_location => $extra_location,
       }
     }
     'apache': {

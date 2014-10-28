@@ -58,51 +58,54 @@ define deploy::application (
         user_default => $user,
         group_default => $group,
         mode_default => $mode,
-        }
+      }
 
-#        notify {"directory_resource: ${id}-${directory_resource}":}
+      deploy::resource::directory_wrapper { $id:
+        directory_resource => $directory_resource,
+        directory_defaults => $directory_defaults,
+        directory_id => "#${name}@${fqdn}",
+        require => [ Deploy::Install[$id], File["/var/lib/${deploy::user}/${id}.json"] ]
+      }
 
-        deploy::resource::directory_wrapper { $id:
-          directory_resource => $directory_resource,
-          directory_defaults => $directory_defaults,
-          directory_id => "#${name}@${fqdn}",
-          require => [ Deploy::Install[$id], File["/var/lib/${deploy::user}/${id}.json"] ]
-        }
+      $file_defaults = {
+        mysql_resource => $mysql_resource,
+        memcache_resource => $memcache_resource,
+        memcacheq_resource => $memcacheq_resource,
+        rabbitmq_resource => $rabbitmq_resource,
+        mongo_resource => $mongo_resource,
+        graylog_resource => $graylog_resource,
+        api_resource => $api_resource,
+        config_resource => $config_resource,
+        user_default => $user,
+        group_default => $group,
+        mode_default => $mode,
+      }
 
-        $file_defaults = {
-          mysql_resource => $mysql_resource,
-          memcache_resource => $memcache_resource,
-          memcacheq_resource => $memcacheq_resource,
-          rabbitmq_resource => $rabbitmq_resource,
-          mongo_resource => $mongo_resource,
-          graylog_resource => $graylog_resource,
-          api_resource => $api_resource,
-          config_resource => $config_resource,
-          user_default => $user,
-          group_default => $group,
-          mode_default => $mode,
-        }
+      deploy::resource::file_wrapper { $id:
+        file_resource => $file_resource,
+        file_defaults => $file_defaults,
+        file_id => "#${name}@${fqdn}",
+        require => [ Deploy::Install[$id], File["/var/lib/${deploy::user}/${id}.json"], Deploy::Resource::Directory_wrapper[$id] ]
+      }
 
-        deploy::resource::file_wrapper { $id:
-          file_resource => $file_resource,
-          file_defaults => $file_defaults,
-          file_id => "#${name}@${fqdn}",
-          require => [ Deploy::Install[$id], File["/var/lib/${deploy::user}/${id}.json"], Deploy::Resource::Directory_wrapper[$id] ]
-        }
+      $symlink_defaults = {
+        user_default => $user,
+        group_default => $group,
+        mode_default => $mode,
+      }
 
-        $symlink_defaults = {
-          user_default => $user,
-          group_default => $group,
-          mode_default => $mode,
-        }
+      deploy::resource::symlink_wrapper { $id:
+        symlink_resource => $symlink_resource,
+        symlink_defaults => $symlink_defaults,
+        symlink_id => "#${name}@${fqdn}",
+        require => [ Deploy::Install[$id], File["/var/lib/${deploy::user}/${id}.json"], Deploy::Resource::File_wrapper[$id], Deploy::Resource::Directory_wrapper[$id] ]
+      }
+    }
 
-        deploy::resource::symlink_wrapper { $id:
-          symlink_resource => $symlink_resource,
-          symlink_defaults => $symlink_defaults,
-          symlink_id => "#${name}@${fqdn}",
-          require => [ Deploy::Install[$id], File["/var/lib/${deploy::user}/${id}.json"], Deploy::Resource::File_wrapper[$id], Deploy::Resource::Directory_wrapper[$id] ]
-        }
 
+    if $run {
+
+      if $local_resources {
         $exec_defaults = {
           id => $id,
           path_default => $path,
@@ -111,9 +114,6 @@ define deploy::application (
         }
         create_resources_append('deploy::resource::exec',$exec_resource,$exec_defaults,"#${name}@${fqdn}")
       }
-
-
-    if $run {
 
       if $exported_resources {
         create_resources_append('deploy::resource::mysql',$mysql_resource,{},"#${name}@${fqdn}")

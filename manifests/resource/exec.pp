@@ -3,6 +3,7 @@ define deploy::resource::exec (
   $command,
   $env_path = '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
   $id,
+  $environment,
   $user_default,
   $group_default,
   $path_default,

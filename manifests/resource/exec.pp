@@ -14,7 +14,7 @@ define deploy::resource::exec (
   exec { $name:
     refreshonly => true,
     user => $user,
-#    environment => ['HOME=/home/appdeploy'],
+    environment => ['HOME=/var/lib/deploy'],
     command => $command,
     path => $env_path,
     cwd => $cwd,

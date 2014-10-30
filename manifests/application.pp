@@ -111,6 +111,7 @@ define deploy::application (
           path_default => $path,
           user_default => $user,
           group_default => $group,
+          require => [ Deploy::Install[$id], File["/var/lib/${deploy::user}/${id}.json"] ]
         }
         create_resources_append('deploy::resource::exec',$exec_resource,$exec_defaults,"#${name}@${fqdn}")
       }
